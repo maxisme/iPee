@@ -14,6 +14,8 @@
 
 @implementation AppDelegate
 
+NSString* url_string = @"https://ipee.maxis.me/ipee";
+
 NSString* network_error_string = @"No Internet!";
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
@@ -23,6 +25,7 @@ NSString* network_error_string = @"No Internet!";
     [self createStatusBarItem];
     [self updateIP:1];
     
+    //check ip every 5 seconds
     [NSTimer scheduledTimerWithTimeInterval:5.0f
                                      target:self selector:@selector(updateIP:) userInfo:nil repeats:YES];
 }
@@ -35,38 +38,38 @@ NSString* network_error_string = @"No Internet!";
 #pragma mark - internet stuff
 -(void)updateIP:(int)x{
     
-    NSURL *url = [NSURL URLWithString:@"https://m4x.co/ipee.php"];
+    NSURL *url = [NSURL URLWithString:url_string];
     NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url];
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
     [NSURLConnection sendAsynchronousRequest:urlRequest queue:queue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error)
-    {
-        if (error){
-            NSLog(@"error %@", error);
-            [self setStatus:network_error_string];
-        }else{
-            NSString* ip = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-            [self setStatus:ip];
-            
-            if(![ip isEqual: _ip] && ip){ //if IP has changed
-                [self updateIPinfo];
-                
-                //send notification
-                if([_storedStuff integerForKey:@"notifications"] == 1 && x != 1 && _ip && ip){
-                    NSUserNotification *notification = [[NSUserNotification alloc] init];
-                    notification.title = @"Your IP has changed!";
-                    notification.informativeText = [NSString stringWithFormat:@"From: %@ to: %@",_ip, ip];
-                    [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
-                }
-                
-                _ip = ip;
-            }
-        }
-    }];
+     {
+         if (error){
+             NSLog(@"error %@", error);
+             [self setStatus:network_error_string];
+         }else{
+             NSString* ip = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+             [self setStatus:ip];
+             
+             if(![ip isEqual: _ip] && ip){ //if IP has changed
+                 [self updateIPinfo];
+                 
+                 //send notification
+                 if([_storedStuff integerForKey:@"notifications"] == 1 && x != 1 && _ip && ip){
+                     NSUserNotification *notification = [[NSUserNotification alloc] init];
+                     notification.title = @"Your IP has changed!";
+                     notification.informativeText = [NSString stringWithFormat:@"From: %@ to: %@",_ip, ip];
+                     [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+                 }
+                 
+                 _ip = ip;
+             }
+         }
+     }];
 }
 
 -(void)updateIPinfo{
     if(_statusItem.menu){
-        NSURL *url = [NSURL URLWithString:@"https://m4x.co/ipee.php?more"];
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?more",url_string]];
         NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url];
         NSOperationQueue *queue = [[NSOperationQueue alloc] init];
         [NSURLConnection sendAsynchronousRequest:urlRequest queue:queue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error)
