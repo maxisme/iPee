@@ -19,6 +19,7 @@
 
 //settings menu bar
 @property (nonatomic) NSMenuItem* notification;
+@property (nonatomic) NSMenuItem* localIPAddress;
 @property (nonatomic) NSMenuItem* showOnStartupItem;
 @property (nonatomic) NSMenuItem* item1;
 @property (nonatomic) NSMenuItem* item2;
@@ -29,6 +30,7 @@
 @property (nonatomic) NSMenuItem* item7;
 @property (nonatomic) NSMenuItem* item8;
 @property (nonatomic) NSMenuItem* item9;
+
 
 @end
 

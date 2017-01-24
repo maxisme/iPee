@@ -7,6 +7,8 @@
 //
 
 #import "AppDelegate.h"
+#include <ifaddrs.h>
+#include <arpa/inet.h>
 
 @interface AppDelegate ()
 
@@ -26,8 +28,7 @@ NSString* network_error_string = @"No Internet!";
     [self updateIP:1];
     
     //check ip every 5 seconds
-    [NSTimer scheduledTimerWithTimeInterval:5.0f
-                                     target:self selector:@selector(updateIP:) userInfo:nil repeats:YES];
+    [NSTimer scheduledTimerWithTimeInterval:5.0f target:self selector:@selector(updateIP:) userInfo:nil repeats:YES];
 }
 
 -(void)setStatus:(NSString*)mess{
@@ -35,7 +36,7 @@ NSString* network_error_string = @"No Internet!";
     _statusItem.attributedTitle=attributedString;
 }
 
-#pragma mark - internet stuff
+#pragma mark - IP
 -(void)updateIP:(int)x{
     
     NSURL *url = [NSURL URLWithString:url_string];
@@ -66,6 +67,7 @@ NSString* network_error_string = @"No Internet!";
          }
      }];
 }
+
 
 -(void)updateIPinfo{
     if(_statusItem.menu){
@@ -111,7 +113,39 @@ NSString* network_error_string = @"No Internet!";
                  [self setStatus:_ip];
              }
          }];
+        [_localIPAddress setTitle:[NSString stringWithFormat:@"Local IP: %@", [self getIPAddress]]];
     }
+}
+
+- (NSString *)getIPAddress {
+    
+    NSString *address = @"error";
+    struct ifaddrs *interfaces = NULL;
+    struct ifaddrs *temp_addr = NULL;
+    int success = 0;
+    // retrieve the current interfaces - returns 0 on success
+    success = getifaddrs(&interfaces);
+    if (success == 0) {
+        // Loop through linked list of interfaces
+        temp_addr = interfaces;
+        while(temp_addr != NULL) {
+            if(temp_addr->ifa_addr->sa_family == AF_INET) {
+                // Check if interface is en0 which is the wifi connection on the iPhone
+                if([[NSString stringWithUTF8String:temp_addr->ifa_name] isEqualToString:@"en0"]) {
+                    // Get NSString from C String
+                    address = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr)];
+                    
+                }
+                
+            }
+            
+            temp_addr = temp_addr->ifa_next;
+        }
+    }
+    // Free memory
+    freeifaddrs(interfaces);
+    return address;
+    
 }
 
 - (void)copyIP{
@@ -196,12 +230,10 @@ NSString* network_error_string = @"No Internet!";
     
     [mainMenu addItem:[NSMenuItem separatorItem]];
     
-    NSString* localIP = [[[NSHost currentHost] addresses] objectAtIndex:0];
-    
-    NSMenuItem* localAddress = [[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"Local IP: %@",localIP] action:NULL keyEquivalent:@""];
-    [localAddress setTarget:self];
-    [localAddress setEnabled:false];
-    [mainMenu addItem:localAddress];
+    _localIPAddress = [[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"Local IP: %@", [self getIPAddress]] action:NULL keyEquivalent:@""];
+    [_localIPAddress setTarget:self];
+    [_localIPAddress setEnabled:false];
+    [mainMenu addItem:_localIPAddress];
     
     [mainMenu addItem:[NSMenuItem separatorItem]];
     
