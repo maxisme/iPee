@@ -1,8 +1,4 @@
 <?php
-$file = "iPee.zip";
-header('Content-type:  application/zip');
-header('Content-Length: ' . filesize($file));
-header('Content-Disposition: attachment; filename="'.$file.'"');
-readfile($file);
-header("Location: /");
+//for some reason hosting this on github works - doesn't usually
+header("Location: https://github.com/maxisme/iPee/raw/master/ipee.maxis.me/iPee.zip");
 ?> 
