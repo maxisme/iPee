@@ -5,6 +5,15 @@ session_start();
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head> 
+	<!-- tab icons - https://realfavicongenerator.net/ -->
+	<link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" href="/favicons/favicon-32x32.png" sizes="32x32">
+	<link rel="icon" type="image/png" href="/favicons/favicon-16x16.png" sizes="16x16">
+	<link rel="manifest" href="/favicons/manifest.json">
+	<link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" color="#5bbad5">
+	<link rel="shortcut icon" href="/favicons/favicon.ico">
+	<meta name="msapplication-config" content="/favicons/browserconfig.xml">
+	<meta name="theme-color" content="#ffffff">
 	<!-- meta stuff -->
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<meta name="description" content="An app to tell you your public IP address">
@@ -21,7 +30,6 @@ session_start();
 	<link rel="stylesheet" type="text/css" href="https://maxis.me/template/css/style.css"/>
 	<!-- maxis.me scripts -->
 	<script type="text/javascript" src="https://maxis.me/template/scripts/jquery.easing.min.js"></script>
-	<script type="text/javascript" src="https://maxis.me/template/scripts/scrolling-nav.js"></script>
 	<script type="text/javascript" src="https://maxis.me/template/scripts/script.js"></script>
 
 	<title>iPee</title>
@@ -31,27 +39,32 @@ session_start();
 	<!-- HOME -->
 	<page>
 		<div align="center">
-			<br/><br/><img height="350" src="logo.png"><br/><br/><br/>
+			<br/><br/><img height="400" src="logo.png"><br/><br/>
 			<h1>iPee</h1>
 			<div id="navMenu">
 				<a class="page-scroll" href="#howitworks">How It Works</a> | <a class="page-scroll" href="#contact">Contact</a> | <a class="page-scroll" href="#tsandcs">Ts & Cs</a> 
 			</div><br/><br/><br/>
 			<a id="down" href="download">download</a><br/><br/>
-		</div>
+		</div> 
 	</page>
 
 	<!-- HOW IT WORKS -->
 	<page id="howitworks">
 		<h2>How It Works</h2>
-		<div id="info">
-			iPee is a minimal Mac App that sits in your menu bar and shows you your public IP address.
+		<div>
+			<p class="info">
+				iPee is a minimal Mac App that sits in your menu bar and shows you your public IP address.
+			</p>
+			<p>
+				<img width="30%" src="ScreenShot.png"/> 
+			</p>
 		</div>
 	</page>
 
 	<!-- Contact -->
 	<page id="contact">
 		<h2>contact</h2>
-		<span id='info'>
+		<span class='info'>
         <span id="contactForm">
         <div align="center">
         <?php
@@ -85,11 +98,24 @@ session_start();
 	<!-- Ts & Cs -->
 	<page id="tsandcs">
 		<h2>Ts & Cs</h2>
-		<div id="info">
+		<div class="info">
 			By using the Notifi application you are agreeing to these terms:<br /><br />
 			Use of the Service is at your own risk. The Service is provided on an "AS IS" and "AS AVAILABLE" basis without any representation or endorsement made and without warranty of any kind whether expressed or implied, including but not limited to the implied warranties of satisfactory quality, fitness for a particular purpose, non-infringement, compatibility, security and accuracy.<br /><br />To the extent permitted by law, the Service, will not be liable for any indirect or consequential loss or damage whatsoever (including without limitation, loss of business, opportunity, data, profits) arising out of or in connection with the use of the Service. 
 		</div>
 	</page>
+	
+	<!-- weird element to add shaddow to images... don't ask -->
+	<svg height="0" xmlns="http://www.w3.org/2000/svg">
+    <filter id="drop-shadow">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="4"/>
+        <feOffset dx="0" dy="0" result="offsetblur"/>
+        <feFlood flood-color="rgba(0,0,0,0.5)"/>
+        <feComposite in2="offsetblur" operator="in"/>
+        <feMerge>
+            <feMergeNode/>
+            <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+    </filter>
 </body>
 
 </html>
